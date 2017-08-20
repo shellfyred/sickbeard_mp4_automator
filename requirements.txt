@@ -1,0 +1,11 @@
+requests==2.9.1
+subliminal==1.1.1
+qtfaststart==1.8
+guessit==1.0.3
+rarfile==3.0
+babelfish==0.5.5
+requests_cache==0.4.12
+deluge_client==1.0.5
+setuptools==20.7.0
+couchpotato==0.1.0
+simplejson==3.11.1
