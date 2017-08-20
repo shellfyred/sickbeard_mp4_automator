@@ -64,6 +64,16 @@ def processEpisode(dirName, settings, nzbGet=False, logger=None):
         r = requests.post(url, data=json.dumps(payload), headers=headers)
         rstate = r.json()
         log.info("%sSonarr response: %s." % (infoprefix, rstate['state']))
+         # wait for radarr to finish processing before we try to delete the folder
+        update_url = url + "/" + str(rstate['id'])
+        update_request = requests.get(update_url, headers=headers)
+        update_state = update_request.json()
+        while str(update_state['state']) != "completed":
+            log.info("Sleeping while Sonarr processes new file")
+            time.sleep(60)
+            update_request = requests.get(update_url, headers=headers)
+            update_state = update_request.json()
+        log.info("Sonarr status changed to %s" % update_state['state'])
         return True
     except:
         log.exception("%sUpdate to Sonarr failed, check if Sonarr is running, autoProcess.ini settings and make sure your Sonarr settings are correct (apikey?), or check install of python modules requests." % errorprefix)
